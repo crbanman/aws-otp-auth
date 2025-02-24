@@ -23,13 +23,17 @@ Ensure the following before using this tool:
 
 ### Pre-built Binaries
 
-Pre-built binaries are now available for download in the [Releases](https://github.com/crbanman/aws-otp-auth/releases) section. Download the appropriate binary for your operating system and architecture.
+Pre-built binaries are available for Linux systems (amd64 and arm64) in the [Releases](https://github.com/crbanman/aws-otp-auth/releases) section.
 
 Move the binary to a location in your PATH for easy access:
 
 ```bash
-sudo mv aws-otp-auth /usr/local/bin/
+sudo mv aws-otp-auth-linux-* /usr/local/bin/aws-otp-auth
 ```
+
+### macOS Users
+
+Due to code signing requirements on macOS, pre-built binaries are not provided for macOS. macOS users should build from source following the instructions below.
 
 ### Build from Source
 
@@ -56,72 +60,4 @@ go build -o aws-otp-auth ./cmd/aws-otp-auth
 
 ## Usage
 
-Run the CLI tool with default settings:
-
-```bash
-./aws-otp-auth
-```
-
-If additional customization is needed, use the available options:
-
-```bash
-./aws-otp-auth --profile-from default-long-term --profile-to default --mfa-arn arn:aws:iam::123456789012:mfa/your-user --otp 123456 --verbose
-```
-
-### Command-Line Flags
-
-- `--profile-from` : Source AWS profile for obtaining session credentials (default: `default-long-term`).
-- `--profile-to` : Target AWS profile for storing new session credentials (default: `default`).
-- `--mfa-arn` : MFA device ARN for authentication. Auto-detects if not provided.
-- `--otp` : One-Time Password for MFA authentication. Prompts interactively if omitted.
-- `--verbose` : Enables detailed logging.
-- `--force` : Forces re-authentication even if credentials are still valid.
-
-### Example Usage
-
-To update the `default` profile with new temporary credentials using MFA:
-
-```bash
-./aws-otp-auth --profile-from my-long-term-profile --profile-to default --mfa-arn arn:aws:iam::123456789012:mfa/my-mfa-device
-```
-
-If `--otp` is not supplied, the tool will prompt for it interactively.
-
-## AWS Credentials File Format
-
-Ensure your `~/.aws/credentials` file follows the standard INI format:
-
-```ini
-[default-long-term]
-aws_access_key_id = YOUR_LONG_TERM_ACCESS_KEY
-aws_secret_access_key = YOUR_LONG_TERM_SECRET_KEY
-
-[default]
-# Updated dynamically by the CLI
-aws_access_key_id = NEW_TEMPORARY_ACCESS_KEY
-aws_secret_access_key = NEW_TEMPORARY_SECRET_KEY
-aws_session_token = NEW_TEMPORARY_SESSION_TOKEN
-aws_session_token_expiration = 2025-02-24T15:04:05Z
-```
-
-## Development & Testing
-
-### Running Tests
-
-Execute tests using:
-
-```bash
-make test
-```
-
-Or manually:
-
-```bash
-go test -v ./...
-```
-
-## Troubleshooting
-
-- **Invalid Credentials:** Ensure `~/.aws/credentials` contains valid long-term access keys.
-- **MFA Device Not Found:** Verify the MFA device ARN is correct or allow the tool to auto-detect.
-- **Session Token Not Updated:** Check if an expired session token is still in use and use `--force` to override.
+// ... existing code ...

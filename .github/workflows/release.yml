@@ -24,15 +24,19 @@ jobs:
           go-version: "1.24"
           check-latest: true
 
-      - name: Build multi-architecture binaries
-        run: make build-multiarch
+      - name: Build Linux binaries
+        run: |
+          mkdir -p dist
+          for GOARCH in amd64 arm64; do \
+            BIN=aws-otp-auth-linux-$$GOARCH; \
+            echo "Building $$BIN for linux/$$GOARCH"; \
+            env GOOS=linux GOARCH=$$GOARCH go build -o dist/$$BIN ./cmd/aws-otp-auth; \
+          done
 
       - name: Make binaries executable
         run: |
           chmod +x dist/aws-otp-auth-linux-amd64
           chmod +x dist/aws-otp-auth-linux-arm64
-          chmod +x dist/aws-otp-auth-darwin-amd64
-          chmod +x dist/aws-otp-auth-darwin-arm64
 
       - name: Get version from tag
         id: get_version
@@ -49,5 +53,3 @@ jobs:
           files: |
             dist/aws-otp-auth-linux-amd64
             dist/aws-otp-auth-linux-arm64
-            dist/aws-otp-auth-darwin-amd64
-            dist/aws-otp-auth-darwin-arm64
