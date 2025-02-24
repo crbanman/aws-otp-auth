@@ -24,13 +24,7 @@ jobs:
         run: make build
 
       - name: Build Linux binaries
-        run: |
-          mkdir -p dist
-          for GOARCH in amd64 arm64; do \
-            BIN=aws-otp-auth-linux-$$GOARCH; \
-            echo "Building $$BIN for linux/$$GOARCH"; \
-            env GOOS=linux GOARCH=$$GOARCH go build -o dist/$$BIN ./cmd/aws-otp-auth; \
-          done
+        run: make build-multiarch
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

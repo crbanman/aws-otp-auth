@@ -25,13 +25,7 @@ jobs:
           check-latest: true
 
       - name: Build Linux binaries
-        run: |
-          mkdir -p dist
-          for GOARCH in amd64 arm64; do \
-            BIN=aws-otp-auth-linux-$$GOARCH; \
-            echo "Building $$BIN for linux/$$GOARCH"; \
-            env GOOS=linux GOARCH=$$GOARCH go build -o dist/$$BIN ./cmd/aws-otp-auth; \
-          done
+        run: make build-multiarch
 
       - name: Make binaries executable
         run: |
