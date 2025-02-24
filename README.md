@@ -60,4 +60,72 @@ go build -o aws-otp-auth ./cmd/aws-otp-auth
 
 ## Usage
 
-// ... existing code ...
+Run the CLI tool with default settings:
+
+```bash
+./aws-otp-auth
+```
+
+If additional customization is needed, use the available options:
+
+```bash
+./aws-otp-auth --profile-from default-long-term --profile-to default --mfa-arn arn:aws:iam::123456789012:mfa/your-user --otp 123456 --verbose
+```
+
+### Command-Line Flags
+
+- `--profile-from` : Source AWS profile for obtaining session credentials (default: `default-long-term`).
+- `--profile-to` : Target AWS profile for storing new session credentials (default: `default`).
+- `--mfa-arn` : MFA device ARN for authentication. Auto-detects if not provided.
+- `--otp` : One-Time Password for MFA authentication. Prompts interactively if omitted.
+- `--verbose` : Enables detailed logging.
+- `--force` : Forces re-authentication even if credentials are still valid.
+
+### Example Usage
+
+To update the `default` profile with new temporary credentials using MFA:
+
+```bash
+./aws-otp-auth --profile-from my-long-term-profile --profile-to default --mfa-arn arn:aws:iam::123456789012:mfa/my-mfa-device
+```
+
+If `--otp` is not supplied, the tool will prompt for it interactively.
+
+## AWS Credentials File Format
+
+Ensure your `~/.aws/credentials` file follows the standard INI format:
+
+```ini
+[default-long-term]
+aws_access_key_id = YOUR_LONG_TERM_ACCESS_KEY
+aws_secret_access_key = YOUR_LONG_TERM_SECRET_KEY
+
+[default]
+# Updated dynamically by the CLI
+aws_access_key_id = NEW_TEMPORARY_ACCESS_KEY
+aws_secret_access_key = NEW_TEMPORARY_SECRET_KEY
+aws_session_token = NEW_TEMPORARY_SESSION_TOKEN
+aws_session_token_expiration = 2025-02-24T15:04:05Z
+```
+
+## Development & Testing
+
+### Running Tests
+
+Execute tests using:
+
+```bash
+make test
+```
+
+Or manually:
+
+```bash
+go test -v ./...
+```
+
+## Troubleshooting
+
+- **Invalid Credentials:** Ensure `~/.aws/credentials` contains valid long-term access keys.
+- **MFA Device Not Found:** Verify the MFA device ARN is correct or allow the tool to auto-detect.
+- **Session Token Not Updated:** Check if an expired session token is still in use and use `--force` to override.
