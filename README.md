@@ -21,7 +21,19 @@ Ensure the following before using this tool:
 
 ## Installation
 
-### Clone the Repository
+### Pre-built Binaries
+
+Pre-built binaries are now available for download in the [Releases](https://github.com/crbanman/aws-otp-auth/releases) section. Download the appropriate binary for your operating system and architecture.
+
+Move the binary to a location in your PATH for easy access:
+
+```bash
+sudo mv aws-otp-auth /usr/local/bin/
+```
+
+### Build from Source
+
+#### Clone the Repository
 
 ```bash
 git clone https://github.com/crbanman/aws-otp-auth.git

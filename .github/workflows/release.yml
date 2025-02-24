@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 permissions:
   contents: write
@@ -21,11 +21,18 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24'
+          go-version: "1.24"
           check-latest: true
 
       - name: Build multi-architecture binaries
         run: make build-multiarch
+
+      - name: Make binaries executable
+        run: |
+          chmod +x dist/aws-otp-auth-linux-amd64
+          chmod +x dist/aws-otp-auth-linux-arm64
+          chmod +x dist/aws-otp-auth-darwin-amd64
+          chmod +x dist/aws-otp-auth-darwin-arm64
 
       - name: Get version from tag
         id: get_version
