@@ -80,6 +80,7 @@ If additional customization is needed, use the available options:
 - `--otp` : One-Time Password for MFA authentication. Prompts interactively if omitted.
 - `--verbose` : Enables detailed logging.
 - `--force` : Forces re-authentication even if credentials are still valid.
+- `--duration` : Session token duration in seconds (default: `28800`, which is 8 hours).
 
 ### Example Usage
 
@@ -90,6 +91,12 @@ To update the `default` profile with new temporary credentials using MFA:
 ```
 
 If `--otp` is not supplied, the tool will prompt for it interactively.
+
+To set a custom session duration (e.g., 12 hours):
+
+```bash
+./aws-otp-auth --duration 43200
+```
 
 ## AWS Credentials File Format
 

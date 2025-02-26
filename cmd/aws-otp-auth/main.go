@@ -25,9 +25,9 @@ type STSCombinedClient interface {
 }
 
 // RunAuthFlow performs the complete authentication flow.
-// It reads the target profile’s credentials and if the token is present and not expired, it exits early.
+// It reads the target profile's credentials and if the token is present and not expired, it exits early.
 // RunAuthFlow performs the complete authentication flow.
-func RunAuthFlow(ctx context.Context, stsClient STSCombinedClient, inReader io.Reader, profile string, providedOTP string, force bool, verbose bool, mfaArn string) error {
+func RunAuthFlow(ctx context.Context, stsClient STSCombinedClient, inReader io.Reader, profile string, providedOTP string, force bool, verbose bool, mfaArn string, durationSeconds int32) error {
 	// Read current target credentials.
 	creds, err := aws.ReadAWSCredentials(profile)
 	if err != nil && verbose {
@@ -55,7 +55,7 @@ func RunAuthFlow(ctx context.Context, stsClient STSCombinedClient, inReader io.R
 	}
 
 	// Retrieve new session credentials using the provided MFA ARN.
-	newCreds, err := aws.GetSessionToken(ctx, stsClient, mfaArn, userOTP, 3600)
+	newCreds, err := aws.GetSessionToken(ctx, stsClient, mfaArn, userOTP, durationSeconds)
 	if err != nil {
 		return fmt.Errorf("failed to get new session token: %w", err)
 	}
@@ -95,6 +95,7 @@ func main() {
 	otp := flag.String("otp", "", "One Time Password for authentication")
 	verbose := flag.Bool("verbose", false, "Enable verbose output")
 	force := flag.Bool("force", false, "Force re-authentication even if credentials are valid")
+	duration := flag.Int("duration", 28800, "Session token duration in seconds (default: 8 hours)")
 	flag.Parse()
 
 	// Determine the AWS username if not provided.
@@ -169,7 +170,7 @@ func main() {
 
 	// Run the authentication flow.
 	// Pass in the MFA ARN we determined.
-	if err = RunAuthFlow(ctx, stsClient, nil, *profileTo, *otp, *force, *verbose, *mfaArn); err != nil {
+	if err = RunAuthFlow(ctx, stsClient, nil, *profileTo, *otp, *force, *verbose, *mfaArn, int32(*duration)); err != nil {
 		fmt.Fprintf(os.Stderr, "Authentication flow failed: %v\n", err)
 		os.Exit(1)
 	}
