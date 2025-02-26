@@ -17,5 +17,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.28.15 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.33.15 // indirect
 	github.com/aws/smithy-go v1.22.2 // indirect
+	github.com/spf13/pflag v1.0.6 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 )

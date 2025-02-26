@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -11,6 +10,7 @@ import (
 
 	"github.com/crbanman/aws-otp-auth/pkg/aws"
 	"github.com/crbanman/aws-otp-auth/pkg/otp"
+	"github.com/spf13/pflag"
 
 	awsPkg "github.com/aws/aws-sdk-go-v2/aws"
 	awsConfig "github.com/aws/aws-sdk-go-v2/config"
@@ -87,16 +87,16 @@ func CreateSTSClient(ctx context.Context, profile, region string) (STSCombinedCl
 
 func main() {
 	// Define flags.
-	profileFrom := flag.String("profile-from", "default-long-term", "AWS profile to use for obtaining session credentials")
-	profileTo := flag.String("profile-to", "default", "AWS profile to update with new session credentials")
-	region := flag.String("region", "", "AWS region to use (auto-detected if not provided)")
-	mfaArn := flag.String("mfa-arn", "", "MFA device ARN to use for authentication (if not provided, will auto lookup)")
-	awsUser := flag.String("user", "", "AWS username (if not provided, defaults to current OS user)")
-	otp := flag.String("otp", "", "One Time Password for authentication")
-	verbose := flag.Bool("verbose", false, "Enable verbose output")
-	force := flag.Bool("force", false, "Force re-authentication even if credentials are valid")
-	duration := flag.Int("duration", 28800, "Session token duration in seconds (default: 8 hours)")
-	flag.Parse()
+	profileFrom := pflag.StringP("profile-from", "f", "default-long-term", "AWS profile to use for obtaining session credentials")
+	profileTo := pflag.StringP("profile-to", "t", "default", "AWS profile to update with new session credentials")
+	region := pflag.StringP("region", "r", "", "AWS region to use (auto-detected if not provided)")
+	mfaArn := pflag.StringP("mfa-arn", "m", "", "MFA device ARN to use for authentication (if not provided, will auto lookup)")
+	awsUser := pflag.StringP("user", "u", "", "AWS username (if not provided, defaults to current OS user)")
+	otp := pflag.StringP("otp", "o", "", "One Time Password for authentication")
+	verbose := pflag.BoolP("verbose", "v", false, "Enable verbose output")
+	force := pflag.BoolP("force", "F", false, "Force re-authentication even if credentials are valid")
+	duration := pflag.IntP("duration", "d", 28800, "Session token duration in seconds (default: 8 hours)")
+	pflag.Parse()
 
 	// Determine the AWS username if not provided.
 	if *awsUser == "" {

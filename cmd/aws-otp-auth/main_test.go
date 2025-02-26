@@ -82,7 +82,7 @@ aws_secret_access_key = INVALID
 	otpReader := strings.NewReader(otpInput)
 
 	// Run the authentication flow with the added MFA ARN argument.
-	err := RunAuthFlow(context.Background(), mockClient, otpReader, "default", "", false, true, "dummy-mfa-arn")
+	err := RunAuthFlow(context.Background(), mockClient, otpReader, "default", "", false, true, "dummy-mfa-arn", 28800)
 	if err != nil {
 		t.Fatalf("RunAuthFlow failed: %v", err)
 	}
@@ -156,7 +156,7 @@ aws_session_token_expiration = ` + validExpiry + `
 	// Create a mock STS client (not used in this flow because token is valid).
 	mockSTS := &mockSTSCombinedClient{CheckValid: true}
 	// Run the authentication flow with the added MFA ARN argument.
-	err := RunAuthFlow(context.Background(), mockSTS, nil, "default", "", false, true, "dummy-mfa-arn")
+	err := RunAuthFlow(context.Background(), mockSTS, nil, "default", "", false, true, "dummy-mfa-arn", 28800)
 	if err != nil {
 		t.Errorf("RunAuthFlow failed when token was valid: %v", err)
 	}
