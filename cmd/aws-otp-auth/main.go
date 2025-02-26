@@ -34,12 +34,6 @@ func RunAuthFlow(ctx context.Context, stsClient STSCombinedClient, inReader io.R
 		fmt.Printf("Warning: failed to read credentials: %v\n", err)
 	}
 
-	// If credentials have an expiration and are still valid, exit.
-	if creds != nil && !creds.Expiration.IsZero() && time.Now().Before(creds.Expiration) {
-		fmt.Println("Existing credentials are valid. No update necessary.")
-		return nil
-	}
-
 	// If force is not set and token is still valid, exit.
 	if !force && creds != nil && !creds.Expiration.IsZero() && time.Now().Before(creds.Expiration) {
 		if verbose {
