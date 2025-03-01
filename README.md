@@ -1,5 +1,7 @@
 # AWS OTP Authentication CLI
 
+**DISCLAIMER:** This is highly WIP and might not work for you right now.
+
 A command-line tool for securely authenticating with AWS when Multi-Factor Authentication (MFA) or a One-Time Password (OTP) is required. This utility validates existing AWS credentials and, if needed, prompts for an OTP to generate new temporary session credentials via AWS STS. It automatically updates the AWS credentials file to streamline the authentication process.
 
 ## Features
